@@ -102,7 +102,6 @@ async function Main() {
             },
             primitive: {
                 topology: "triangle-list"
-                //topology: "line-strip" //can make a nother pipeline with line strip if we want to make line strips
             },
         };
         pipeline = device.createRenderPipeline(pipelineDescriptor); // Create the pipline
@@ -136,7 +135,7 @@ async function Main() {
     let boxes = [];
     let xBox = -0.8;
     let yBox = 0.85;
-    numBoxes = 10;
+    numBoxes = 15;
     colNum = 1;
     for (let i = 0; i < numBoxes; i++) { // loop creating boxes
         let boxVerts = createRect(xBox, yBox, 0.35, 0.1, boxColors[colNum++ % 2]); // alternate box colors
@@ -147,10 +146,11 @@ async function Main() {
         device.queue.writeBuffer(boxVBO, 0, boxVerts);
         VBOs.push(boxVBO);
         boxes.push(boxVerts);
-        xBox += 0.4;
-        if (i == 4) { // create second row
+        if (xBox == 0.8) { // create second row
             xBox = -0.8;
-            yBox = 0.7;
+            yBox -= 0.15;
+        } else {
+            xBox += 0.4;
         }
     }
 
@@ -204,7 +204,8 @@ async function Main() {
             colorAttachments: [{
                 view: context.getCurrentTexture().createView(),
                 loadOp: "clear",
-                loadOp: "clear", clearValue: [0.0, 0.0, 0.0, 1], // clear screen to blue
+                loadOp: "clear", 
+                clearValue: [0.0, 0.0, 0.0, 1], // clear screen to blue
                 storeOp: 'store'
             }]
         };
@@ -258,7 +259,7 @@ async function Main() {
             yBall + ballWidth > yPaddle - paddleHeight &&
             yBall - ballWidth < yPaddle + paddleHeight);
         // directs ball based on hit position
-        if (collide) {  // logic with help from ChatGPT
+        if (collide) { 
             let hitPosition = (xBall - xPaddle) / paddleWidth
             ballMoveX = hitPosition * 0.02;
         }
